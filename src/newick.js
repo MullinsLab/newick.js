@@ -1,7 +1,7 @@
 /**
  * Newick format parser in JavaScript.
  *
- * Copyright (c) Jason Davies 2010.
+ * Copyright (c) Jason Davies 2010, Thomas Sibley 2014.
  *  
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -91,6 +91,19 @@
       }
     }
     return tree;
+  };
+  exports.serialize = function(root) {
+      return this._serialize(root) + ";";
+  };
+  exports._serialize = function(node) {
+    var newick = "";
+    if (node.branchset && node.branchset.length)
+        newick += "(" + node.branchset.map(this._serialize, this).join(",") + ")";
+    if (node.name != null)
+        newick += node.name;
+    if (node.length != null)
+        newick += ":" + node.length;
+    return newick;
   };
 })(
     // exports will be set in any commonjs platform; use it if it's available
